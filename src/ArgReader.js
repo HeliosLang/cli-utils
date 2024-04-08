@@ -80,11 +80,11 @@ export class ArgReader {
     readOption(long, short, def) {
         const i = this.findFlag(long, short)
 
-        if (i >= this.args.length - 1) {
-            throw new CliError(`expected argument after ${this.args[i]}`)
-        }
-
         if (i >= 0) {
+            if (i >= this.args.length - 1) {
+                throw new CliError(`expected argument after ${this.args[i]}`)
+            }
+
             if (this.used.has(i + 1)) {
                 throw new CliError(
                     `expected optional argument after ${this.args[i]} (argument already consumed)`

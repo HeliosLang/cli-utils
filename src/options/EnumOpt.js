@@ -38,7 +38,7 @@ export class EnumOpt {
      * @returns {string}
      */
     makeHelp() {
-        return `${this.long}${this.short ? `, ${this.short}` : ""} <${this.variants.join(" | ")}> ${this.description}`
+        return `${this.long}${this.short ? `, ${this.short}` : ""} <${this.variants.join(" | ")}> ${this.description ?? ""}`
     }
 
     /**
