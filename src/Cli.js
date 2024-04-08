@@ -5,17 +5,18 @@ import { Command } from "./Command.js"
 import { CliError } from "./CliError.js"
 
 /**
- * @typedef {import("./OptionConfig.js").OptionConfig} OptionConfig
+ * @template T
+ * @typedef {import("./options/index.js").Opt<T>} Opt
  */
 
 /**
- * @template {{[arg: string]: OptionConfig}} O
+ * @template {{[arg: string]: Opt<any>}} O
  * @template {{[name: string]: Command<any, any>}} S
  * @typedef {import("./Command.js").CommandConfig<O, S>} CommandConfig
  */
 
 /**
- * @template {{[arg: string]: OptionConfig}} O
+ * @template {{[arg: string]: Opt<any>}} O
  * @template {{[name: string]: Command<any, any>}} S
  */
 export class Cli {

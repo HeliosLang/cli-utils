@@ -3,23 +3,27 @@ import { ArgReader } from "./ArgReader.js"
 
 /**
  * @typedef {import("./ArgReader.js").ArgReaderLike} ArgReaderLike
- * @typedef {import("./OptionConfig.js").OptionConfig} OptionConfig
  */
 
 /**
- * @template {OptionConfig} C
- * @typedef {import("./OptionConfig.js").OptionType<C>} OptionType
+ * @template T
+ * @typedef {import("./options/index.js").Opt<T>} Opt
  */
 
 /**
- * @template {{[arg: string]: OptionConfig}} O
+ * @template {Opt<any>} O
+ * @typedef {import("./options/index.js").OptType<O>} OptType
+ */
+
+/**
+ * @template {{[arg: string]: Opt<any>}} O
  * @template {{[name: string]: Command<any, any>}} S
  * @typedef {{
  *   options?: O
  *   minArgs?: number
  *   maxArgs?: number
  *   action(args: string[], options: {
- *      [D in keyof O]: OptionType<O[D]>
+ *      [D in keyof O]: OptType<O[D]>
  *    }): Promise<void>
  * } | {
  *   commands: S
@@ -27,7 +31,7 @@ import { ArgReader } from "./ArgReader.js"
  */
 
 /**
- * @template {{[arg: string]: OptionConfig}} O
+ * @template {{[arg: string]: Opt<any>}} O
  * @template {{[name: string]: Command<any, any>}} S
  */
 export class Command {
@@ -64,22 +68,7 @@ export class Command {
 
             for (let key in this.config.options) {
                 const opt = this.config.options[key]
-
-                if (opt.kind == "flag") {
-                    w.writeLine(
-                        `  ${opt.long}${opt.short ? `, ${opt.short}` : ""}`
-                    )
-                } else if (opt.kind == "string") {
-                    w.writeLine(
-                        `  ${opt.long}${opt.short ? `, ${opt.short}` : ""} <${key}>`
-                    )
-                } else if (opt.kind == "enum") {
-                    w.writeLine(
-                        `  ${opt.long}${opt.short ? `, ${opt.short}` : ""} <${opt.variants.join(" | ")}>`
-                    )
-                } else {
-                    throw new Error("unhandled option kind")
-                }
+                w.writeLine(`  ${opt.makeHelp()}`)
             }
         }
 
@@ -108,25 +97,7 @@ export class Command {
             if (this.config.options) {
                 for (let key in this.config.options) {
                     const opt = this.config.options[key]
-
-                    if (opt.kind == "flag") {
-                        optionalArgs[key] = r.readFlag(opt.long, opt.short)
-                    } else if (opt.kind == "string") {
-                        optionalArgs[key] = r.readOption(
-                            opt.long,
-                            opt.short,
-                            opt.default
-                        )
-                    } else if (opt.kind == "enum") {
-                        optionalArgs[key] = r.readOptionalEnum(
-                            opt.long,
-                            opt.short,
-                            opt.variants,
-                            opt.default
-                        )
-                    } else {
-                        throw new Error("unhandled option type")
-                    }
+                    optionalArgs[key] = opt.read(r)
                 }
             }
 
