@@ -91,6 +91,7 @@ export class ArgReader {
                 )
             }
 
+            this.used.add(i)
             this.used.add(i + 1)
 
             return this.args[i + 1]

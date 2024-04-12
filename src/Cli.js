@@ -3,6 +3,7 @@ import { exit } from "node:process"
 import { StringWriter } from "@helios-lang/codec-utils"
 import { Command } from "./Command.js"
 import { CliError } from "./CliError.js"
+import { expectSome } from "@helios-lang/type-utils"
 
 /**
  * @template T
@@ -22,14 +23,22 @@ import { CliError } from "./CliError.js"
 export class Cli {
     /**
      * @readonly
+     * @type {string}
+     */
+    name
+
+    /**
+     * @readonly
      * @type {Command<O, S>}
      */
     entryPoint
 
     /**
+     * @param {string} name
      * @param {CommandConfig<O, S>} config
      */
-    constructor(config) {
+    constructor(name, config) {
+        this.name = name
         this.entryPoint = new Command(config)
     }
 
@@ -39,17 +48,10 @@ export class Cli {
     get help() {
         const w = new StringWriter()
 
-        w.writeLine(`${this.binName} help: show this message`)
-        w.writeLine(this.entryPoint.makeHelp([this.binName]))
+        w.writeLine(`${this.name} help: show this message`)
+        w.writeLine(this.entryPoint.makeHelp([this.name]))
 
         return w.finalize()
-    }
-
-    /**
-     * @type {string}
-     */
-    get binName() {
-        return basename(process.argv[1])
     }
 
     /**
@@ -60,10 +62,19 @@ export class Cli {
     }
 
     /**
+     * @param {string[]} rawArgs
      * @returns {Promise<void>}
      */
-    async run() {
-        const args = process.argv.slice(2)
+    async run(rawArgs = process.argv) {
+        const i = rawArgs.findIndex((arg) => basename(arg).includes(this.name))
+
+        if (i == -1) {
+            throw new Error(
+                `Internal error: Cli name ${this.name} doesn't correspond with binary name`
+            )
+        }
+
+        const args = rawArgs.slice(i + 1)
 
         if (args[0] == "help") {
             console.log(this.help)
