@@ -23,7 +23,6 @@ import { ArgReader } from "../ArgReader.js"
  */
 export class EnumOpt {
     /**
-     *
      * @param {EnumOptConfig<V>} param0
      */
     constructor({ long, short, description, variants, default: def }) {

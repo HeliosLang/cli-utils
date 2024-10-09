@@ -10,21 +10,21 @@ export class ArgReader {
      * @private
      * @type {string[]}
      */
-    args
+    _args
 
     /**
      * @private
      * @type {Set<number>}
      */
-    used
+    _used
 
     /**
      * @private
      * @param {string[]} args
      */
     constructor(args) {
-        this.args = args
-        this.used = new Set()
+        this._args = args
+        this._used = new Set()
     }
 
     /**
@@ -64,7 +64,7 @@ export class ArgReader {
         const i = this.findFlag(long, short)
 
         if (i >= 0) {
-            this.used.add(i)
+            this._used.add(i)
             return true
         } else {
             return false
@@ -81,20 +81,20 @@ export class ArgReader {
         const i = this.findFlag(long, short)
 
         if (i >= 0) {
-            if (i >= this.args.length - 1) {
-                throw new CliError(`expected argument after ${this.args[i]}`)
+            if (i >= this._args.length - 1) {
+                throw new CliError(`expected argument after ${this._args[i]}`)
             }
 
-            if (this.used.has(i + 1)) {
+            if (this._used.has(i + 1)) {
                 throw new CliError(
-                    `expected optional argument after ${this.args[i]} (argument already consumed)`
+                    `expected optional argument after ${this._args[i]} (argument already consumed)`
                 )
             }
 
-            this.used.add(i)
-            this.used.add(i + 1)
+            this._used.add(i)
+            this._used.add(i + 1)
 
-            return this.args[i + 1]
+            return this._args[i + 1]
         } else {
             if (def) {
                 if (typeof def == "string") {
@@ -129,18 +129,18 @@ export class ArgReader {
      * @returns {string}
      */
     readPositional() {
-        for (let i = 0; i < this.args.length; i++) {
-            if (this.used.has(i)) {
+        for (let i = 0; i < this._args.length; i++) {
+            if (this._used.has(i)) {
                 continue
             }
 
-            const arg = this.args[i]
+            const arg = this._args[i]
 
             if (arg.startsWith("-")) {
                 continue
             }
 
-            this.used.add(i)
+            this._used.add(i)
             return arg
         }
 
@@ -153,18 +153,18 @@ export class ArgReader {
     readRest() {
         const rest = []
 
-        for (let i = 0; i < this.args.length; i++) {
-            if (this.used.has(i)) {
+        for (let i = 0; i < this._args.length; i++) {
+            if (this._used.has(i)) {
                 continue
             }
 
-            const arg = this.args[i]
+            const arg = this._args[i]
 
             if (arg.startsWith("-")) {
                 throw new CliError(`unrecognized flag ${arg}`)
             }
 
-            this.used.add(i)
+            this._used.add(i)
             rest.push(arg)
         }
 
@@ -178,8 +178,8 @@ export class ArgReader {
      * @returns {number} - returns -1 if not found
      */
     findFlag(long, short) {
-        const il = this.args.indexOf(long)
-        const is = short ? this.args.indexOf(short) : -1
+        const il = this._args.indexOf(long)
+        const is = short ? this._args.indexOf(short) : -1
 
         if (il >= 0 && is >= 0) {
             throw new CliError(
@@ -190,13 +190,13 @@ export class ArgReader {
         const i = il >= 0 ? il : is
 
         if (i >= 0) {
-            if (this.used.has(i)) {
+            if (this._used.has(i)) {
                 throw new Error(
-                    `internal error: arg ${this.args[i]} already used`
+                    `internal error: arg ${this._args[i]} already used`
                 )
             }
 
-            this.args.forEach((arg, j) => {
+            this._args.forEach((arg, j) => {
                 if ((arg == long || arg == short) && j != i) {
                     throw new CliError(`duplicate flag ${arg}`)
                 }
