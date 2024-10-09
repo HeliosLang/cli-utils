@@ -1,6 +1,6 @@
 import { describe, it } from "node:test"
-import { Command } from "./Command.js"
 import { EnumOpt } from "./options/index.js"
+import { Command } from "./Command.js"
 
 describe(Command.name, () => {
     it("typecheck ok for enum", () => {

@@ -1,9 +1,8 @@
 import { basename } from "node:path"
 import { exit } from "node:process"
 import { StringWriter } from "@helios-lang/codec-utils"
-import { Command } from "./Command.js"
 import { CliError } from "./CliError.js"
-import { expectSome } from "@helios-lang/type-utils"
+import { Command } from "./Command.js"
 
 /**
  * @template T

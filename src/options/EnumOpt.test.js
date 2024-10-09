@@ -1,6 +1,6 @@
 import { describe, it } from "node:test"
-import { EnumOpt } from "./EnumOpt.js"
 import { ArgReader } from "../ArgReader.js"
+import { EnumOpt } from "./EnumOpt.js"
 
 describe(EnumOpt.name, () => {
     it("typecheck ok", () => {

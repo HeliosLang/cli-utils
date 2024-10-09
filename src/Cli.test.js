@@ -1,7 +1,7 @@
-import { describe, it } from "node:test"
-import { EnumOpt, StringOpt } from "./options/index.js"
-import { Cli } from "./Cli.js"
 import { strictEqual } from "node:assert"
+import { describe, it } from "node:test"
+import { StringOpt } from "./options/index.js"
+import { Cli } from "./Cli.js"
 
 describe(Cli.name, () => {
     let output = ""
