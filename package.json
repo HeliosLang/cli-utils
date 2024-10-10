@@ -1,6 +1,6 @@
 {
     "name": "@helios-lang/cli-utils",
-    "version": "0.1.9",
+    "version": "0.1.10",
     "description": "Simplest possible cli library",
     "main": "src/index.js",
     "types": "types/index.d.ts",
