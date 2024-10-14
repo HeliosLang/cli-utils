@@ -3,7 +3,7 @@
         "checkJs": true,
         "declaration": true,
         "declarationMap": true,
-        "declarationDir": "./types",
+        "declarationDir": "types",
         "skipLibCheck": true,
         "noImplicitThis": true,
         "strictNullChecks": true,
@@ -13,5 +13,5 @@
         "lib": ["es6"]
     },
     "exclude": ["node_modules", "**/*.d.ts"],
-    "include": ["src/**/*.js", "node_modules/@helios-lang/type-utils"]
+    "include": ["src/**/*.js"]
 }

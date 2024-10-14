@@ -1,4 +1,8 @@
-import { ArgReader } from "../ArgReader.js"
+export {}
+
+/**
+ * @typedef {import("../ArgReader.js").ArgReader} ArgReader
+ */
 
 /**
  * @template {Opt<any>} C

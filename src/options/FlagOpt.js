@@ -1,6 +1,5 @@
-import { ArgReader } from "../ArgReader.js"
-
 /**
+ * @typedef {import("../ArgReader.js").ArgReader} ArgReader
  * @typedef {import("./Opt.js").OptConfig} OptConfig
  */
 

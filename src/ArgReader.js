@@ -1,11 +1,36 @@
-import {} from "@helios-lang/type-utils"
 import { CliError } from "./CliError.js"
 
 /**
  * @typedef {string[] | ArgReader} ArgReaderLike
  */
 
-export class ArgReader {
+/**
+ * @typedef {{
+ *   readEnum(list: string[]): string
+ *   readFlag(long: string, short: string | undefined): boolean
+ *   readOption(long: string, short: string | undefined, def: string | (() => string) | undefined): string
+ *   readOptionalEnum(long: string, short: string | undefined, variants: string[], def: (string | (() => string))): string
+ *   readPositional(): string
+ *   readRest(): string[]
+ * }} ArgReader
+ */
+
+/**
+ * @param {{args: ArgReaderLike}} props
+ * @returns {ArgReader}
+ */
+export function makeArgReader(props) {
+    if (Array.isArray(props.args)) {
+        return new ArgReaderImpl(props.args)
+    } else {
+        return props.args
+    }
+}
+
+/**
+ * @implements {ArgReader}
+ */
+class ArgReaderImpl {
     /**
      * @private
      * @type {string[]}
@@ -19,26 +44,11 @@ export class ArgReader {
     _used
 
     /**
-     * @private
      * @param {string[]} args
      */
     constructor(args) {
         this._args = args
         this._used = new Set()
-    }
-
-    /**
-     * @param {ArgReaderLike} args
-     * @returns {ArgReader}
-     */
-    static new(args) {
-        if (args instanceof ArgReader) {
-            return args
-        } else if (Array.isArray(args)) {
-            return new ArgReader(args)
-        } else {
-            throw new Error("unexpected argument")
-        }
     }
 
     /**
@@ -57,7 +67,7 @@ export class ArgReader {
 
     /**
      * @param {string} long
-     * @param {Option<string>} short
+     * @param {string | undefined} short
      * @returns {boolean}
      */
     readFlag(long, short) {
@@ -73,8 +83,8 @@ export class ArgReader {
 
     /**
      * @param {string} long
-     * @param {Option<string>} short
-     * @param {Option<string | (() => string)>} def
+     * @param {string | undefined} short
+     * @param {string | (() => string) | undefined} def
      * @returns {string}
      */
     readOption(long, short, def) {
@@ -110,7 +120,7 @@ export class ArgReader {
 
     /**
      * @param {string} long
-     * @param {Option<string>} short
+     * @param {string | undefined} short
      * @param {string[]} variants
      * @param {(string | (() => string))} def
      * @returns {string}
@@ -174,7 +184,7 @@ export class ArgReader {
     /**
      * @private
      * @param {string} long
-     * @param {Option<string>} short - short name is optional
+     * @param {string | undefined} short - short name is optional
      * @returns {number} - returns -1 if not found
      */
     findFlag(long, short) {

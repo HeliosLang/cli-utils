@@ -1,6 +1,6 @@
 import { basename } from "node:path"
 import { exit } from "node:process"
-import { StringWriter } from "@helios-lang/codec-utils"
+import { makeStringWriter } from "@helios-lang/codec-utils"
 import { CliError } from "./CliError.js"
 import { Command } from "./Command.js"
 
@@ -45,7 +45,7 @@ export class Cli {
      * @type {string}
      */
     get help() {
-        const w = new StringWriter()
+        const w = makeStringWriter()
 
         w.writeLine(`${this.name} help: show this message`)
         w.writeLine(this.entryPoint.makeHelp([this.name]))

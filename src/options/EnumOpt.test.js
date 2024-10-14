@@ -1,5 +1,5 @@
 import { describe, it } from "node:test"
-import { ArgReader } from "../ArgReader.js"
+import { makeArgReader } from "../ArgReader.js"
 import { EnumOpt } from "./EnumOpt.js"
 
 describe(EnumOpt.name, () => {
@@ -10,7 +10,7 @@ describe(EnumOpt.name, () => {
             default: "a"
         })
 
-        const r = ArgReader.new(["--my-enum", "b"])
+        const r = makeArgReader({ args: ["--my-enum", "b"] })
 
         /**
          * @satisfies {"a" | "b"}

@@ -1,7 +1,8 @@
-import { StringWriter } from "@helios-lang/codec-utils"
-import { ArgReader } from "./ArgReader.js"
+import { makeStringWriter } from "@helios-lang/codec-utils"
+import { makeArgReader } from "./ArgReader.js"
 
 /**
+ * @typedef {import("./ArgReader.js").ArgReader} ArgReader
  * @typedef {import("./ArgReader.js").ArgReaderLike} ArgReaderLike
  */
 
@@ -53,7 +54,7 @@ export class Command {
      * @returns {string}
      */
     makeHelp(route) {
-        const w = new StringWriter()
+        const w = makeStringWriter()
 
         if ("commands" in this.config) {
             for (let key in this.config.commands) {
@@ -80,7 +81,7 @@ export class Command {
      * @returns {Promise<void>}
      */
     async run(args) {
-        const r = ArgReader.new(args)
+        const r = makeArgReader({ args })
 
         if ("commands" in this.config) {
             const name = r.readEnum(Object.keys(this.config.commands))
